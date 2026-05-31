@@ -1,0 +1,4 @@
+interface:
+  display_name: "OHT Scheduling System"
+  short_description: "Build and use an OHT scheduling web app."
+  default_prompt: "Create or update an OHT scheduling web app with EDD/SPT dispatching, imports, Gantt chart, metrics, and export."

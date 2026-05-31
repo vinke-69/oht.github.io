@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OHT Scheduling System</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow">Overhead Hoist Transport</p>
+          <h1 data-i18n="title">OHT Scheduling System</h1>
+        </div>
+        <div class="top-actions">
+          <select id="languageSelect" aria-label="Language">
+            <option value="en">English</option>
+            <option value="zh">繁體中文</option>
+          </select>
+          <button id="themeToggle" type="button" data-i18n="lightMode">Light Mode</button>
+        </div>
+      </header>
+
+      <section class="control-grid">
+        <div class="panel">
+          <h2 data-i18n="inputs">Inputs</h2>
+          <div class="field-row">
+            <label>
+              <span data-i18n="method">Method</span>
+              <select id="methodSelect">
+                <option value="EDD">EDD</option>
+                <option value="SPT">SPT</option>
+                <option value="COMPARE" data-i18n="compare">Compare</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="ohtCount">OHT Count</span>
+              <input id="ohtCount" type="number" min="1" max="999" value="3" />
+            </label>
+          </div>
+
+          <div class="upload-row">
+            <label class="upload">
+              <span data-i18n="excelUpload">Upload Excel/CSV</span>
+              <input id="dataFile" type="file" accept=".xlsx,.xls,.csv" />
+            </label>
+            <label class="upload">
+              <span data-i18n="imageUpload">Import Photo</span>
+              <input id="photoFile" type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.bmp" />
+            </label>
+          </div>
+          <div id="photoPreview" class="photo-preview" hidden>
+            <img id="photoImage" alt="Imported scheduling photo" />
+            <button id="runPhotoOcr" type="button" data-i18n="runPhotoOcr">Read Table with OCR</button>
+          </div>
+          <p id="ocrStatus" class="muted" data-i18n="ocrHint">Photo import is for reference. Use OCR only when you want to read a table from the photo.</p>
+        </div>
+
+        <div class="panel">
+          <h2 data-i18n="quickEntry">Quick Entry</h2>
+          <div class="actions">
+            <button id="addTask" type="button" data-i18n="addTask">Add Task</button>
+            <button id="loadSample" type="button" data-i18n="loadSample">Load Sample</button>
+            <button id="runSchedule" type="button" class="primary" data-i18n="run">Run Schedule</button>
+            <button id="exportExcel" type="button" data-i18n="export">Export Excel</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="section-title">
+          <h2 data-i18n="taskData">Task Data</h2>
+          <p class="muted" data-i18n="taskHint">Columns: Task, Lot, Route, Start-Ready Time, Transport Time, Required Arrival Time</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="task">Task</th>
+                <th>Lot</th>
+                <th data-i18n="tool">Route</th>
+                <th data-i18n="arrival">Start-Ready Time</th>
+                <th data-i18n="processing">Transport Time</th>
+                <th data-i18n="due">Required Arrival Time</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="taskRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="comparePanel" class="metrics-grid"></section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h2 data-i18n="gantt">Gantt Chart</h2>
+          <p class="muted" data-i18n="ganttHint">Hover bars to inspect task timing.</p>
+        </div>
+        <div id="ganttChart" class="gantt"></div>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="section-title">
+          <h2 data-i18n="results">Schedule Result</h2>
+          <p id="recommendation" class="muted"></p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="method">Method</th>
+                <th data-i18n="task">Task</th>
+                <th>Lot</th>
+                <th data-i18n="tool">Route</th>
+                <th>OHT</th>
+                <th data-i18n="start">Start</th>
+                <th data-i18n="finish">Finish</th>
+                <th data-i18n="delay">Delay</th>
+              </tr>
+            </thead>
+            <tbody id="resultRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
